@@ -2,6 +2,8 @@ package com.ldw.shoppingapp.Recycler;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -31,19 +33,40 @@ public class ShopRecyclerAdapter extends RecyclerView.Adapter<ShopRecyclerAdapte
     @androidx.annotation.NonNull
     @Override
     public ShopViewHolder onCreateViewHolder(@NonNull @androidx.annotation.NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.custom_item_card,viewGroup,false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.custom_item_card, viewGroup, false);
         return new ShopViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull @androidx.annotation.NonNull ShopViewHolder shopViewHolder, int i) {
-        ProductBean productBean=data.get(i);
+        ProductBean productBean = data.get(i);
 
-        shopViewHolder.productImage.setImageDrawable(getima);
+        shopViewHolder.productImage.setImageDrawable(getImage(productBean.getImage()));
+        shopViewHolder.productName.setText(productBean.getName());
+        shopViewHolder.productPrice.setText(String.valueOf(productBean.getPrice()));
     }
-    public Drawable getImage(byte[] bytes){
-        Bitmap
+
+    @Override
+    public int getItemCount() {
+        if (data == null) {
+            return 0;
+        } else {
+            return data.size();
+        }
+
     }
+
+    public void updateData(ArrayList<ProductBean> data) {
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
+    public Drawable getImage(byte[] bytes) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        Drawable drawable = new BitmapDrawable(null, bitmap);
+        return drawable;
+    }
+
     public class ShopViewHolder extends RecyclerView.ViewHolder {
         ImageView productImage;
         TextView productName;
